@@ -1,3 +1,4 @@
+
 import type { Timestamp } from "firebase/firestore";
 
 export interface User {
@@ -12,6 +13,7 @@ export interface Playlist {
   title: string;
   description: string;
   imageUrl: string;
+  dataAiHint?: string; // Added for AI image hints
   createdBy?: string; // User ID
   createdAt?: Timestamp;
   trackIds?: string[]; // Array of track IDs

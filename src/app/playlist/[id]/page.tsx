@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams } from "next/navigation";
@@ -24,8 +25,8 @@ export default function PlaylistDetailPage() {
   const playlist = {
     title: "Epic Driving Mix",
     description: "High-energy tracks for the open road.",
-    imageUrl: "https://placehold.co/300x300.png?text=Playlist+Cover",
-    creator: { name: "DJ Roadmaster", avatarUrl: "https://placehold.co/40x40.png?text=DJ" },
+    imageUrl: "https://placehold.co/300x300.png", // Removed ?text=...
+    creator: { name: "DJ Roadmaster", avatarUrl: "https://placehold.co/40x40.png" }, // Removed ?text=...
     tracks: [
       { id: "t1", title: "Highway Star", artist: "Deep Purple", album: "Machine Head", duration: "6:05" },
       { id: "t2", title: "Born to Run", artist: "Bruce Springsteen", album: "Born to Run", duration: "4:30" },
@@ -48,7 +49,7 @@ export default function PlaylistDetailPage() {
           width={280}
           height={280}
           className="rounded-lg shadow-xl aspect-square object-cover"
-          data-ai-hint="album cover"
+          data-ai-hint="playlist cover" // Updated hint
         />
         <div className="flex-1 space-y-4">
           <p className="text-sm font-medium text-primary">PLAYLIST</p>
@@ -56,7 +57,7 @@ export default function PlaylistDetailPage() {
           <p className="text-muted-foreground text-lg">{playlist.description}</p>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Avatar className="h-6 w-6">
-              <AvatarImage src={playlist.creator.avatarUrl} />
+              <AvatarImage src={playlist.creator.avatarUrl} data-ai-hint="user avatar" />
               <AvatarFallback>{playlist.creator.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <span>Created by <span className="font-semibold text-foreground">{playlist.creator.name}</span></span>

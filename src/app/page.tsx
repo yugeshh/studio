@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -11,12 +12,12 @@ import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 
 // Sample playlists - replace with Firestore fetching
 const samplePlaylists: Playlist[] = [
-  { id: "1", title: "Chill Vibes", description: "Relax and unwind with these soothing tunes.", imageUrl: "https://placehold.co/600x400.png?text=Chill+Vibes", trackIds: ["t1", "t2"] },
-  { id: "2", title: "Workout Beats", description: "Get pumped up with high-energy tracks for your workout.", imageUrl: "https://placehold.co/600x400.png?text=Workout+Beats", trackIds: ["t3", "t4"] },
-  { id: "3", title: "Focus Flow", description: "Instrumental music to help you concentrate and focus.", imageUrl: "https://placehold.co/600x400.png?text=Focus+Flow", trackIds: ["t5", "t6"] },
-  { id: "4", title: "Indie Anthems", description: "Discover the best new indie artists.", imageUrl: "https://placehold.co/600x400.png?text=Indie+Anthems", trackIds: ["t7", "t8"] },
-  { id: "5", title: "Road Trip", description: "The perfect soundtrack for your next adventure on the road.", imageUrl: "https://placehold.co/600x400.png?text=Road+Trip", trackIds: ["t9", "t10"] },
-  { id: "6", title: "Evening Jazz", description: "Smooth jazz for a sophisticated evening.", imageUrl: "https://placehold.co/600x400.png?text=Evening+Jazz", trackIds: ["t11", "t12"] },
+  { id: "1", title: "Chill Vibes", description: "Relax and unwind with these soothing tunes.", imageUrl: "https://placehold.co/600x400.png", dataAiHint: "chill music", trackIds: ["t1", "t2"] },
+  { id: "2", title: "Workout Beats", description: "Get pumped up with high-energy tracks for your workout.", imageUrl: "https://placehold.co/600x400.png", dataAiHint: "workout fitness", trackIds: ["t3", "t4"] },
+  { id: "3", title: "Focus Flow", description: "Instrumental music to help you concentrate and focus.", imageUrl: "https://placehold.co/600x400.png", dataAiHint: "focus study", trackIds: ["t5", "t6"] },
+  { id: "4", title: "Indie Anthems", description: "Discover the best new indie artists.", imageUrl: "https://placehold.co/600x400.png", dataAiHint: "indie music", trackIds: ["t7", "t8"] },
+  { id: "5", title: "Road Trip", description: "The perfect soundtrack for your next adventure on the road.", imageUrl: "https://placehold.co/600x400.png", dataAiHint: "road trip", trackIds: ["t9", "t10"] },
+  { id: "6", title: "Evening Jazz", description: "Smooth jazz for a sophisticated evening.", imageUrl: "https://placehold.co/600x400.png", dataAiHint: "jazz music", trackIds: ["t11", "t12"] },
 ];
 
 
@@ -37,14 +38,25 @@ export default function HomePage() {
         // For now, using a simpler query without ordering/limiting if 'createdAt' is not guaranteed.
         const q = query(playlistsCollection, limit(20));
         const querySnapshot = await getDocs(q);
-        const fetchedPlaylists: Playlist[] = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        } as Playlist));
+        const fetchedPlaylists: Playlist[] = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title || "Untitled Playlist",
+            description: data.description || "No description available.",
+            // Ensure imageUrl has a fallback and add dataAiHint from Firestore or a default
+            imageUrl: data.imageUrl || "https://placehold.co/600x400.png", 
+            dataAiHint: data.dataAiHint || "music playlist", // Add this line
+            trackIds: data.trackIds || [],
+            // Ensure other fields like createdBy, createdAt are handled if they might be missing
+            createdBy: data.createdBy,
+            createdAt: data.createdAt,
+          } as Playlist;
+        });
         
         if (fetchedPlaylists.length === 0) {
             // If Firestore is empty or returns no results, use sample data
-            setPlaylists(samplePlaylists);
+            setPlaylists(samplePlaylists.map(p => ({...p, dataAiHint: p.dataAiHint || "music playlist"})));
         } else {
             setPlaylists(fetchedPlaylists);
         }
@@ -52,7 +64,7 @@ export default function HomePage() {
       } catch (err) {
         console.error("Error fetching playlists:", err);
         setError("Failed to load playlists. Displaying sample data.");
-        setPlaylists(samplePlaylists); // Fallback to sample data on error
+        setPlaylists(samplePlaylists.map(p => ({...p, dataAiHint: p.dataAiHint || "music playlist"}))); // Fallback to sample data on error
       } finally {
         setIsLoading(false);
       }

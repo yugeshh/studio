@@ -10,14 +10,14 @@ import { SearchIcon, ListMusic } from "lucide-react";
 import { db } from "@/lib/firebase/config";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 
-// Sample playlists - replace with Firestore fetching
+// Sample playlists - now using Unsplash URLs
 const samplePlaylists: Playlist[] = [
-  { id: "1", title: "Chill Vibes", description: "Relax and unwind with these soothing tunes.", imageUrl: "https://placehold.co/600x400.png?text=%20", dataAiHint: "chill music", trackIds: ["t1", "t2"] },
-  { id: "2", title: "Workout Beats", description: "Get pumped up with high-energy tracks for your workout.", imageUrl: "https://placehold.co/600x400.png?text=%20", dataAiHint: "workout fitness", trackIds: ["t3", "t4"] },
-  { id: "3", title: "Focus Flow", description: "Instrumental music to help you concentrate and focus.", imageUrl: "https://placehold.co/600x400.png?text=%20", dataAiHint: "focus study", trackIds: ["t5", "t6"] },
-  { id: "4", title: "Indie Anthems", description: "Discover the best new indie artists.", imageUrl: "https://placehold.co/600x400.png?text=%20", dataAiHint: "indie music", trackIds: ["t7", "t8"] },
-  { id: "5", title: "Road Trip", description: "The perfect soundtrack for your next adventure on the road.", imageUrl: "https://placehold.co/600x400.png?text=%20", dataAiHint: "road trip", trackIds: ["t9", "t10"] },
-  { id: "6", title: "Evening Jazz", description: "Smooth jazz for a sophisticated evening.", imageUrl: "https://placehold.co/600x400.png?text=%20", dataAiHint: "jazz music", trackIds: ["t11", "t12"] },
+  { id: "1", title: "Chill Vibes", description: "Relax and unwind with these soothing tunes.", imageUrl: "https://source.unsplash.com/600x400/?chill,music", dataAiHint: "chill music", trackIds: ["t1", "t2"] },
+  { id: "2", title: "Workout Beats", description: "Get pumped up with high-energy tracks for your workout.", imageUrl: "https://source.unsplash.com/600x400/?workout,fitness", dataAiHint: "workout fitness", trackIds: ["t3", "t4"] },
+  { id: "3", title: "Focus Flow", description: "Instrumental music to help you concentrate and focus.", imageUrl: "https://source.unsplash.com/600x400/?focus,study", dataAiHint: "focus study", trackIds: ["t5", "t6"] },
+  { id: "4", title: "Indie Anthems", description: "Discover the best new indie artists.", imageUrl: "https://source.unsplash.com/600x400/?indie,music", dataAiHint: "indie music", trackIds: ["t7", "t8"] },
+  { id: "5", title: "Road Trip", description: "The perfect soundtrack for your next adventure on the road.", imageUrl: "https://source.unsplash.com/600x400/?road,trip", dataAiHint: "road trip", trackIds: ["t9", "t10"] },
+  { id: "6", title: "Evening Jazz", description: "Smooth jazz for a sophisticated evening.", imageUrl: "https://source.unsplash.com/600x400/?jazz,music", dataAiHint: "jazz music", trackIds: ["t11", "t12"] },
 ];
 
 
@@ -33,30 +33,25 @@ export default function HomePage() {
       setError(null);
       try {
         const playlistsCollection = collection(db, "playlists");
-        // Example: Fetch playlists ordered by creation date, limit to 20
-        // const q = query(playlistsCollection, orderBy("createdAt", "desc"), limit(20));
-        // For now, using a simpler query without ordering/limiting if 'createdAt' is not guaranteed.
         const q = query(playlistsCollection, limit(20));
         const querySnapshot = await getDocs(q);
         const fetchedPlaylists: Playlist[] = querySnapshot.docs.map(doc => {
           const data = doc.data();
+          const hint = data.dataAiHint || "music playlist";
           return {
             id: doc.id,
             title: data.title || "Untitled Playlist",
             description: data.description || "No description available.",
-            // Ensure imageUrl has a fallback and add dataAiHint from Firestore or a default
-            imageUrl: data.imageUrl || "https://placehold.co/600x400.png?text=%20", 
-            dataAiHint: data.dataAiHint || "music playlist",
+            imageUrl: data.imageUrl || `https://source.unsplash.com/600x400/?${hint.replace(/ /g, ',')}`, 
+            dataAiHint: hint,
             trackIds: data.trackIds || [],
-            // Ensure other fields like createdBy, createdAt are handled if they might be missing
             createdBy: data.createdBy,
             createdAt: data.createdAt,
           } as Playlist;
         });
         
         if (fetchedPlaylists.length === 0) {
-            // If Firestore is empty or returns no results, use sample data
-            setPlaylists(samplePlaylists.map(p => ({...p, dataAiHint: p.dataAiHint || "music playlist"})));
+            setPlaylists(samplePlaylists);
         } else {
             setPlaylists(fetchedPlaylists);
         }
@@ -64,7 +59,7 @@ export default function HomePage() {
       } catch (err) {
         console.error("Error fetching playlists:", err);
         setError("Failed to load playlists. Displaying sample data.");
-        setPlaylists(samplePlaylists.map(p => ({...p, dataAiHint: p.dataAiHint || "music playlist"}))); // Fallback to sample data on error
+        setPlaylists(samplePlaylists); 
       } finally {
         setIsLoading(false);
       }

@@ -69,8 +69,6 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
         setIsLiked(false);
         toast({ title: "Unliked", description: `Removed "${playlist.title}" from liked songs.` });
       } else {
-        // Ensure the user document exists before trying to update it with arrayUnion
-        // or use setDoc with merge:true to create if it doesn't exist.
         await setDoc(userDocRef, { 
           likedPlaylists: arrayUnion(playlist.id) 
         }, { merge: true });
@@ -85,6 +83,8 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
     }
   };
 
+  const keywords = playlist.dataAiHint?.replace(/ /g, ',') || 'music,album';
+  const fallbackImageUrl = `https://source.unsplash.com/600x400/?${keywords}`;
 
   return (
     <Link href={`/playlist/${playlist.id}`} passHref legacyBehavior>
@@ -92,12 +92,12 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
         <Card className="overflow-hidden transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:shadow-xl h-full flex flex-col">
           <CardHeader className="p-0 relative">
             <Image
-              src={playlist.imageUrl || "https://placehold.co/600x400.png?text=%20"}
+              src={playlist.imageUrl || fallbackImageUrl}
               alt={playlist.title}
               width={600}
               height={400}
               className="aspect-[3/2] w-full object-cover"
-              data-ai-hint={playlist.dataAiHint || "music album"} // Use dataAiHint from playlist object
+              data-ai-hint={playlist.dataAiHint || "music album"}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <Button variant="ghost" size="icon" className="bg-primary/80 hover:bg-primary text-primary-foreground rounded-full h-12 w-12">

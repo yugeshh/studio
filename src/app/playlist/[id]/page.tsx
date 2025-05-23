@@ -25,8 +25,8 @@ export default function PlaylistDetailPage() {
   const playlist = {
     title: "Epic Driving Mix",
     description: "High-energy tracks for the open road.",
-    imageUrl: "https://placehold.co/300x300.png", // Removed ?text=...
-    creator: { name: "DJ Roadmaster", avatarUrl: "https://placehold.co/40x40.png" }, // Removed ?text=...
+    imageUrl: "https://placehold.co/280x280.png?text=%20", 
+    creator: { name: "DJ Roadmaster", avatarUrl: "https://placehold.co/24x24.png?text=%20" }, 
     tracks: [
       { id: "t1", title: "Highway Star", artist: "Deep Purple", album: "Machine Head", duration: "6:05" },
       { id: "t2", title: "Born to Run", artist: "Bruce Springsteen", album: "Born to Run", duration: "4:30" },
@@ -49,7 +49,7 @@ export default function PlaylistDetailPage() {
           width={280}
           height={280}
           className="rounded-lg shadow-xl aspect-square object-cover"
-          data-ai-hint="playlist cover" // Updated hint
+          data-ai-hint="playlist cover" 
         />
         <div className="flex-1 space-y-4">
           <p className="text-sm font-medium text-primary">PLAYLIST</p>

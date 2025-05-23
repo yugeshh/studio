@@ -92,7 +92,7 @@ export function PlaylistCard({ playlist }: PlaylistCardProps) {
         <Card className="overflow-hidden transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:shadow-xl h-full flex flex-col">
           <CardHeader className="p-0 relative">
             <Image
-              src={playlist.imageUrl || "https://placehold.co/600x400.png"}
+              src={playlist.imageUrl || "https://placehold.co/600x400.png?text=%20"}
               alt={playlist.title}
               width={600}
               height={400}

@@ -32,10 +32,10 @@ export default function DownloadPage() {
           </p>
           <div className="flex gap-4">
             <Button size="lg" className="flex items-center gap-2">
-              <Image src="https://placehold.co/24x24.png" alt="App Store" width={24} height={24} data-ai-hint="apple store" /> App Store
+              <Image src="https://placehold.co/24x24.png?text=%20" alt="App Store" width={24} height={24} data-ai-hint="apple store" /> App Store
             </Button>
             <Button size="lg" variant="outline" className="flex items-center gap-2">
-              <Image src="https://placehold.co/24x24.png" alt="Google Play" width={24} height={24} data-ai-hint="google play" /> Google Play
+              <Image src="https://placehold.co/24x24.png?text=%20" alt="Google Play" width={24} height={24} data-ai-hint="google play" /> Google Play
             </Button>
           </div>
         </div>

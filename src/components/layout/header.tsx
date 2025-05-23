@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { UserAvatar } from "@/components/auth/user-avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar"; 
-import { Music2 } from "lucide-react";
+import { Music2, Gem, HelpCircle, Download } from "lucide-react";
 
 export function Header() {
   const { user, loading } = useAuth();
@@ -25,13 +26,22 @@ export function Header() {
 
         <nav className="hidden items-center gap-2 md:flex">
           <Button variant="ghost" asChild>
-            <Link href="/premium">Premium</Link>
+            <Link href="/premium">
+              <Gem className="h-4 w-4" />
+              Premium
+            </Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/support">Support</Link>
+            <Link href="/support">
+              <HelpCircle className="h-4 w-4" />
+              Support
+            </Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link href="/download">Download</Link>
+            <Link href="/download">
+              <Download className="h-4 w-4" />
+              Download
+            </Link>
           </Button>
         </nav>
 
